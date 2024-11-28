@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#This script opens the output of a given SLURM jobid
+# 'ojid' is short for 'open_jobid'
+# It also prints the path of the given stdOut file
+# It works when a job is running and when its done
+#
+# e.g. ojid 38529115
+#	opening /lus/h2resw01/hpcperm/naco/raps/aifs/aifs-o1280-develop-adl-38529115.out ...
+
+jid=$1
+if [[ "$jid" == "" ]]; then
+        echo "error! expected usage 'ojid <slurm job id>'. exiting..."
+        exit 1
+fi
+if [ ! -f $file ]; then
+        echo "Cant find a job output file associated with ID '$jid'. exiting..."
+	exit 1
+fi
+
+file=`scontrol show jobid -dd $jid | awk -F'=' '$0 ~ /StdOut/  { print $2 }'`
+echo "opening $file ..."
+vim $file
